@@ -103,6 +103,8 @@
     var player = [];
     var split = [];
     var shuffledDeck = [];
+    var playerSum;
+    var dealerTotal;
     
     
     /*-------- cached elements --------*/
@@ -128,24 +130,25 @@
     }
     
     function handleStand() {
-        var finalNum = 0;
-        for(i = 0; i < player.length; i++) {
-            var p = player[i];
-            for(var key in p) {
-                finalNum += p[key];
-            }
-        }
-        console.log(finalNum);
-        var dealerTotal = getDealer();
+        dealerTotal = getDealer();
         checkDealer();
+        console.log(dealerTotal);
+        checkWinner();
+    }
 
-        function checkDealer() {
-            if (dealerTotal <= 16) {
-                dealer.push(shuffledDeck[0]);
-                dealerTotal = getDealer();
-            } 
-            console.log(dealerTotal);
+    function checkWinner() {
+        if (playerSum > dealerTotal && playerSum <= 21) {
+            alert('You win');
+        } else {
+            alert('dealer wins');
         }
+    }
+
+    function checkDealer() {
+        if (dealerTotal <= 16) {
+            dealer.push(shuffledDeck[0]);
+            dealerTotal = getDealer();
+        } 
     }
 
     function getDealer() {
@@ -159,10 +162,29 @@
         return dealerNum;
     }
 
+    function checkForBust() {
+        if (playerSum > 21) {
+            alert("BUST!");
+        }
+    }
+
+    function getPlayer() {
+        var finalNum = 0;
+        for(i = 0; i < player.length; i++) {
+            var p = player[i];
+            for(var key in p) {
+                finalNum += p[key];
+            }
+        }
+        return finalNum;
+    }
+
     function handleHit() {
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
-        console.log(player);
+        playerSum = getPlayer();
+        console.log(playerSum);
+        checkForBust();
     }
 
     function handleDeal() {
@@ -176,7 +198,9 @@
         shuffledDeck.shift();
         console.log(player);
         console.log(dealer);
-
+        playerSum = getPlayer();
+        console.log(playerSum);
+        checkForBust();
     }
 
     function makeBet() {
