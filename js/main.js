@@ -136,6 +136,27 @@
             }
         }
         console.log(finalNum);
+        var dealerTotal = getDealer();
+        checkDealer();
+
+        function checkDealer() {
+            if (dealerTotal <= 16) {
+                dealer.push(shuffledDeck[0]);
+                dealerTotal = getDealer();
+            } 
+            console.log(dealerTotal);
+        }
+    }
+
+    function getDealer() {
+        var dealerNum = 0;
+        for(i = 0; i < dealer.length; i++) {
+            var d = dealer[i];
+            for(var k in d) {
+                dealerNum += d[k];
+            }
+        }
+        return dealerNum;
     }
 
     function handleHit() {
