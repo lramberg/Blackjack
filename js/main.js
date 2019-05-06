@@ -17,23 +17,23 @@
     // 2 goes to player
     // 3 goes to dealer face up. 
     
-    // hit or stand buttons appear
+// hit or stand buttons appear
     // if player array 0 === array 1, 
-    // split option appears
+        // split option appears
     // card 1 pushes to split array 0
     // run hit and stand gameplay for each array
     // if hit, card 4 goes to player, repeat for each hit
-    // if array.length - 1 is an ace and total > 21, reassign ace value to 1;
-    // if sum of player array exceeds 21, player busts!
+        // if array.length - 1 is an ace and total > 21, reassign ace value to 1;
+        // if sum of player array exceeds 21, player busts!
     // if stand is clicked
-    // flip dealer card to reveal sum of dealer array
-    // if sum of dealer array exceeds 21, dealer busts and player wins
+        // flip dealer card to reveal sum of dealer array
+        // if sum of dealer array exceeds 21, dealer busts and player wins
     // if sum is <16, the next card index goes to dealer array 
     
     // if dealer sum is > player sum && <21, dealer wins
-    // chips in the pot go to the dealer
+        // chips in the pot go to the dealer
     // if player sum is > dealer sum && <21, player wins
-    // chips in pot go to player bank.
+        // chips in pot go to player bank.
     // if either array = 21, show blackjack message and win message
     
     // if bank array has chips, game can continue, starting with bet function
@@ -107,11 +107,16 @@
     
     /*-------- cached elements --------*/
     var betBtn = document.getElementById('bet');
+    var dealBtn = document.getElementById('deal');
+    var hitBtn = document.getElementById('hit');
+    var standBtn = document.getElementById('stand');
     
     
     /*------- event listeners ---------*/
-    
-    
+    betBtn.addEventListener('click', makeBet);
+    dealBtn.addEventListener('click', handleDeal);
+    hitBtn.addEventListener('click', handleHit);
+    standBtn.addEventListener('click', handleStand);
     
     /*------- functions ---------*/
     init();
@@ -122,6 +127,48 @@
         // render();
     }
     
+    function handleStand() {
+        var finalNum = 0;
+        for(i = 0; i < player.length; i++) {
+            var p = player[i];
+            for(var key in p) {
+                finalNum += p[key];
+            }
+        }
+        console.log(finalNum);
+    }
+
+    function handleHit() {
+        player.push(shuffledDeck[0]);
+        shuffledDeck.shift();
+        console.log(player);
+    }
+
+    function handleDeal() {
+        player.push(shuffledDeck[0]);
+        shuffledDeck.shift();
+        dealer.push(shuffledDeck[0]);
+        shuffledDeck.shift();
+        player.push(shuffledDeck[0]);
+        shuffledDeck.shift();
+        dealer.push(shuffledDeck[0]);
+        shuffledDeck.shift();
+        console.log(player);
+        console.log(dealer);
+
+    }
+
+    function makeBet() {
+        if (bankArray.length > 0) {
+            potArray.push(bankArray[0]);
+            bankArray.shift();
+            console.log(potArray);
+            console.log(bankArray);
+        } else {
+            alert("you are out of money");
+        }
+    }
+
     function shuffle() {
         deckOfCards.forEach(function(card, idx, deckOfCards) {
             var i = Math.floor(Math.random() * deckOfCards.length)
