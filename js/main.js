@@ -129,28 +129,30 @@
         // render();
     }
     
-    function handleStand() {
-        dealerTotal = getDealer();
-        checkDealer();
-        console.log(dealerTotal);
-        checkWinner();
-    }
-
+    
     function checkWinner() {
         if (playerSum > dealerTotal && playerSum <= 21) {
             alert('You win');
         } else {
             alert('dealer wins');
         }
+        
+        player = [];
+        dealer = [];
+        console.log(`cards remaining ${shuffledDeck.length}`);
     }
-
+    
     function checkDealer() {
         if (dealerTotal <= 16) {
             dealer.push(shuffledDeck[0]);
             dealerTotal = getDealer();
-        } 
+        } else if (dealerTotal > 21) {
+            alert("DEALER BUST");
+            player = [];
+            dealer = [];
+        }
     }
-
+    
     function getDealer() {
         var dealerNum = 0;
         for(i = 0; i < dealer.length; i++) {
@@ -161,11 +163,21 @@
         }
         return dealerNum;
     }
+    
+    function handleStand() {
+        dealerTotal = getDealer();
+        checkDealer();
+        console.log(`dealer total is ${dealerTotal}`);
+        // checkWinner();
+    }
 
     function checkForBust() {
         if (playerSum > 21) {
-            alert("BUST!");
-        }
+            alert("PLAYER BUST!");
+            dealer = [];
+            player = [];
+        } 
+        console.log(`cards remaining ${shuffledDeck.length}`);
     }
 
     function getPlayer() {
@@ -183,7 +195,7 @@
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
         playerSum = getPlayer();
-        console.log(playerSum);
+        console.log(`player sum is ${playerSum}`);
         checkForBust();
     }
 
@@ -199,7 +211,7 @@
         console.log(player);
         console.log(dealer);
         playerSum = getPlayer();
-        console.log(playerSum);
+        console.log(`player sum is ${playerSum}`);
         checkForBust();
     }
 
