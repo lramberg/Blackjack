@@ -40,60 +40,10 @@
     // else game is over and render a game over message.
     
     /*-------- constants --------*/
-    const deckOfCards = [
-        {'twoOfClubs' : 2},
-        {'threeOfClubs' : 3},
-        {'fourOfClubs' : 4},
-        {'fiveOfClubs' : 5},
-        {'sixOfClubs' : 6},
-        {'sevenOfClubs' : 7},
-        {'eightOfClubs' : 8},
-        {'nineOfClubs' : 9},
-        {'tenOfClubs' : 10},
-        {'jackOfClubs' : 10},
-        {'queenOfClubs' : 10},
-        {'kingOfClubs' : 10},
-        {'aceOfClubs' : 11},
-        {'twoOfSpades' : 2},
-        {'threeOfSpades' : 3},
-        {'fourOfSpades' : 4},
-        {'fiveOfSpades' : 5},
-        {'sixOfSpades' : 6},
-        {'sevenOfSpades' : 7},
-        {'eightOfSpades' : 8},
-        {'nineOfSpades' : 9},
-        {'tenOfSpades' : 10},
-        {'jackOfSpades' : 10},
-        {'queenOfSpades' : 10},
-        {'kingOfSpades' : 10},
-        {'aceOfSpades' : 11},
-        {'twoOfDiamonds' : 2},
-        {'threeOfDiamonds' : 3},
-        {'fourOfDiamonds' : 4},
-        {'fiveOfDiamonds' : 5},
-        {'sixOfDiamonds' : 6},
-        {'sevenOfDiamonds' : 7},
-        {'eightOfDiamonds' : 8},
-        {'nineOfDiamonds' : 9},
-        {'tenOfDiamonds' : 10},
-        {'jackOfDiamonds' : 10},
-        {'queenOfDiamonds' : 10},
-        {'kingOfDiamonds' : 10},
-        {'aceOfDiamonds' : 11},
-        {'twoOfHearts' : 2},
-        {'threeOfHearts' : 3},
-        {'fourOfHearts' : 4},
-        {'fiveOfHearts' : 5},
-        {'sixOfHearts' : 6},
-        {'sevenOfHearts' : 7},
-        {'eightOfHearts' : 8},
-        {'nineOfHearts' : 9},
-        {'tenOfHearts' : 10},
-        {'jackOfHearts' : 10},
-        {'queenOfHearts' : 10},
-        {'kingOfHearts' : 10},
-        {'aceOfHearts' : 11},
-    ]
+    var suits = ['s', 'c', 'd', 'h'];
+    var ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+
+    var masterDeck = buildMasterDeck();
     
     
     /*-------- app's state variables --------*/
@@ -112,7 +62,8 @@
     var dealBtn = document.getElementById('deal');
     var hitBtn = document.getElementById('hit');
     var standBtn = document.getElementById('stand');
-    
+    var dealerCardContainer = document.getElementById('dealer');
+    var playerCardContainer = document.getElementById('player');  
     
     /*------- event listeners ---------*/
     betBtn.addEventListener('click', makeBet);
@@ -183,31 +134,40 @@
     function getPlayer() {
         var finalNum = 0;
         for(i = 0; i < player.length; i++) {
-            var p = player[i];
-            for(var key in p) {
-                finalNum += p[key];
-            }
+            finalNum += player[i].value;
         }
         return finalNum;
     }
-
+    
     function handleHit() {
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
+        renderCard(playerCardContainer);
         playerSum = getPlayer();
+        console.log(player);
         console.log(`player sum is ${playerSum}`);
         checkForBust();
+    }
+
+    function renderCard(arr, idx, container) {
+        var newCard = document.createElement('div');
+        newCard.setAttribute('class', `card ${arr[idx]}.face`);
+        container.appendChild(newCard);
     }
 
     function handleDeal() {
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
+        renderCard(player, 0, playerCardContainer);
         dealer.push(shuffledDeck[0]);
         shuffledDeck.shift();
+        renderCard(dealer, 0, dealerCardContainer);
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
+        renderCard(player, 1, playerCardContainer);
         dealer.push(shuffledDeck[0]);
         shuffledDeck.shift();
+        renderCard(dealer, 1, dealerCardContainer);
         console.log(player);
         console.log(dealer);
         playerSum = getPlayer();
@@ -227,8 +187,22 @@
     }
 
     function shuffle() {
-        deckOfCards.forEach(function(card, idx, deckOfCards) {
-            var i = Math.floor(Math.random() * deckOfCards.length)
-            shuffledDeck.push(deckOfCards[i]);
-        })
+        var tempDeck = masterDeck.slice();
+        while (tempDeck.length) {
+            var rndIdx = Math.floor(Math.random() * tempDeck.length);
+            shuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
+        };
+    }
+
+    function buildMasterDeck() {
+        var deck = [];
+        suits.forEach(function(suit) {
+            ranks.forEach(function(rank) {
+                deck.push({
+                    face: `${suit}${rank}`,
+                    value: Number(rank) || (rank === 'A' ? 11 : 10)
+                });
+            });
+        });
+        return deck;
     }

@@ -4,5 +4,35 @@
 
 body {
     margin: 0;
-    
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#table {
+    height: 80vh;
+    width: 90vh;
+    background-color: darkgreen;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+#dealer {
+    grid-column: span 3;
+}
+
+#pot {
+    grid-column: 2/3;
+}
+
+#chip-bank {
+    grid-row: 3/4;
+    grid-column: 1/2;
+}
+
+#player {
+    grid-column: span 2;
 }
