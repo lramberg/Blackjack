@@ -58,3 +58,11 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+h2 {
+    color: #FCBB3A;
+}
+
+.hidden {
+    display: none;
+}
