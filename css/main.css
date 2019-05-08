@@ -9,7 +9,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: url("images/background-one.png");
+    
     background-size: 100%;
     background-position: center;
 }
@@ -71,3 +71,10 @@ h2 {
     color: gold;
     font-size: 20px;
 }
+
+/* font-family: 'Poiret One', cursive;
+font-family: 'Limelight', cursive;
+font-family: 'Diplomata SC', cursive;
+font-family: 'Gruppo', cursive;
+font-family: 'Codystar', cursive;
+font-family: 'Notable', sans-serif; */
