@@ -47,7 +47,7 @@
     
     
     /*-------- app's state variables --------*/
-    var bankArray = [100, 100, 100, 100, 100, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
+    var bankArray = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
     var potArray = [];
     var dealer = [];
     var player = [];
@@ -58,15 +58,16 @@
     
     
     /*-------- cached elements --------*/
-    var betBtn = document.getElementById('bet');
     var dealBtn = document.getElementById('deal');
     var hitBtn = document.getElementById('hit');
     var standBtn = document.getElementById('stand');
+    var chipBtn = document.getElementById('bank-chip');
     var dealerCardContainer = document.getElementById('dealer');
     var playerCardContainer = document.getElementById('player');  
+    var msg = document.getElementById('msg');
     
     /*------- event listeners ---------*/
-    betBtn.addEventListener('click', makeBet);
+    chipBtn.addEventListener('click', makeBet);
     dealBtn.addEventListener('click', handleDeal);
     hitBtn.addEventListener('click', handleHit);
     standBtn.addEventListener('click', handleStand);
@@ -77,58 +78,74 @@
         shuffle();
         
         
-        // render();
+        render();
     }
     
+    // function winThePot() {
+
+    // }
     
     function checkWinner() {
         if (playerSum > dealerTotal && playerSum <= 21) {
-            alert('You win');
+            msg.textContent = 'You win';
         } else {
-            alert('dealer wins');
+            msg.textContent = 'Dealer wins';
         }
-        
-        player = [];
-        dealer = [];
-        console.log(`cards remaining ${shuffledDeck.length}`);
+    }
+
+    function flipCard() {
+        var dealerCard = document.querySelector('.card.back-blue');
+        dealerCard.setAttribute('class', `card ${dealer[0].face}`);
     }
     
     function checkDealer() {
-        if (dealerTotal <= 16) {
+        while (dealerTotal <= 16) {
             dealer.push(shuffledDeck[0]);
             dealerTotal = getDealer();
-        } else if (dealerTotal > 21) {
-            alert("DEALER BUST");
-            player = [];
-            dealer = [];
-        }
+        } 
     }
     
     function getDealer() {
         var dealerNum = 0;
-        for(i = 0; i < dealer.length; i++) {
-            var d = dealer[i];
-            for(var k in d) {
-                dealerNum += d[k];
-            }
+        for(i = 0; i < dealer.length; i ++) {
+            dealerNum += dealer[i].value;
         }
         return dealerNum;
     }
     
     function handleStand() {
+        flipCard();
         dealerTotal = getDealer();
         checkDealer();
         console.log(`dealer total is ${dealerTotal}`);
-        // checkWinner();
+        checkWinner();
+    }
+
+    function checkForAce() {
+        let hasA = player.some(function(card) {
+            var char = card.face.split('');
+            return char[char.length-1] === 'A';
+        });
+        if (hasA && playerSum > 21) {
+          for(i = 0; i < player.length; i++) {
+            if (player[i].face === 'sA'){
+              player[i].value = 1;
+            } else if (player[i].face === 'cA') {
+              player[i].value = 1;
+            } else if (player[i].face === 'dA') {
+              player[i].value = 1;
+            } else if (player[i].face === 'hA') {
+              player[i].value = 1;
+            }
+          }
+        }
     }
 
     function checkForBust() {
+        playerSum = getPlayer();
         if (playerSum > 21) {
             alert("PLAYER BUST!");
-            dealer = [];
-            player = [];
         } 
-        console.log(`cards remaining ${shuffledDeck.length}`);
     }
 
     function getPlayer() {
@@ -142,16 +159,21 @@
     function handleHit() {
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
-        renderCard(playerCardContainer);
+        renderCard(player, player.length-1, playerCardContainer);
         playerSum = getPlayer();
-        console.log(player);
-        console.log(`player sum is ${playerSum}`);
+        checkForAce();
         checkForBust();
+    }
+
+    function renderBack(container) {
+        var newCard = document.createElement('div');
+        newCard.setAttribute('class', 'card back-blue');
+        container.appendChild(newCard);
     }
 
     function renderCard(arr, idx, container) {
         var newCard = document.createElement('div');
-        newCard.setAttribute('class', `card ${arr[idx]}.face`);
+        newCard.setAttribute('class', `card ${arr[idx].face}`);
         container.appendChild(newCard);
     }
 
@@ -161,29 +183,46 @@
         renderCard(player, 0, playerCardContainer);
         dealer.push(shuffledDeck[0]);
         shuffledDeck.shift();
-        renderCard(dealer, 0, dealerCardContainer);
+        renderBack(dealerCardContainer);
         player.push(shuffledDeck[0]);
         shuffledDeck.shift();
         renderCard(player, 1, playerCardContainer);
         dealer.push(shuffledDeck[0]);
         shuffledDeck.shift();
         renderCard(dealer, 1, dealerCardContainer);
-        console.log(player);
-        console.log(dealer);
         playerSum = getPlayer();
-        console.log(`player sum is ${playerSum}`);
         checkForBust();
+    }
+
+    function sumPot() {
+        var potTotal = 0;
+        for(i = 0; i < potArray.length; i ++) {
+            potTotal += potArray[i];
+        }
+        return potTotal;
+    }
+
+    function sumBank() {
+        var bankTotal = 0;
+        for(i = 0; i < bankArray.length; i ++) {
+            bankTotal += bankArray[i];
+        }
+        return bankTotal;
     }
 
     function makeBet() {
         if (bankArray.length > 0) {
             potArray.push(bankArray[0]);
             bankArray.shift();
-            console.log(potArray);
-            console.log(bankArray);
+            chipBtn.innerHTML = sumBank();
+            document.getElementById('pot-chip').innerHTML = sumPot();
         } else {
-            alert("you are out of money");
+            msg.innerText = "You need more money"
         }
+    }
+
+    function render() {
+        chipBtn.innerHTML = sumBank();
     }
 
     function shuffle() {

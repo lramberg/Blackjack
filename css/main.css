@@ -36,3 +36,22 @@ body {
 #player {
     grid-column: span 2;
 }
+
+.chip {
+    height: 100px;
+    width: 100px;
+    background-color: gold;
+    border-radius: 50%;
+}
+
+#bank-chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#pot-chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
