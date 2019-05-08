@@ -9,7 +9,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+    background-image: url("css/images/background.png");
     background-size: 100%;
     background-position: center;
 }
