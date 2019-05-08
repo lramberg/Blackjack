@@ -55,6 +55,7 @@
     var shuffledDeck = [];
     var playerSum;
     var dealerTotal;
+    var winner;
     
     
     /*-------- cached elements --------*/
@@ -81,16 +82,24 @@
         render();
     }
     
-    // function winThePot() {
-
-    // }
+    function finishGame() {
+        if (winner === "Player") {
+            
+        }
+    }
     
     function checkWinner() {
-        if (playerSum > dealerTotal && playerSum <= 21) {
+        if (playerSum <= 21 && dealerTotal > 21) {
             msg.textContent = 'You win';
+            winner = "Player";
+        } else if (playerSum <= 21 && playerSum > dealerTotal) {
+            msg.textContent = 'You win';
+            winner = "Player";
         } else {
-            msg.textContent = 'Dealer wins';
+            msg.textContent = 'Dealer win';
+            winner = "Dealer";
         }
+        return winner;
     }
 
     function flipCard() {
@@ -101,7 +110,10 @@
     function checkDealer() {
         while (dealerTotal <= 16) {
             dealer.push(shuffledDeck[0]);
+            shuffledDeck.shift();
+            renderCard(dealer, dealer.length - 1, dealerCardContainer);
             dealerTotal = getDealer();
+            console.log(dealer);
         } 
     }
     
@@ -144,7 +156,7 @@
     function checkForBust() {
         playerSum = getPlayer();
         if (playerSum > 21) {
-            alert("PLAYER BUST!");
+            msg.textContent = "PLAYER BUST!";
         } 
     }
 
