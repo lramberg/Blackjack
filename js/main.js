@@ -63,16 +63,22 @@ var dealBtn = document.getElementById('deal');
 var hitBtn = document.getElementById('hit');
 var standBtn = document.getElementById('stand');
 var chipBtn = document.getElementById('bank-chip');
+var resetBtn = document.getElementById('reset');
+var winBtn = document.getElementById('win');
 var dealerCardContainer = document.getElementById('dealer');
 var playerCardContainer = document.getElementById('player');  
 var msg = document.getElementById('msg');
 var potDisplay = document.getElementById('pot-chip');
+var bankText = document.getElementById('bank-text');
+var potText = document.getElementById('pot-text');
 
 /*------- event listeners ---------*/
 chipBtn.addEventListener('click', makeBet);
 dealBtn.addEventListener('click', handleDeal);
 hitBtn.addEventListener('click', handleHit);
 standBtn.addEventListener('click', handleStand);
+resetBtn.addEventListener('click', finishGame);
+winBtn.addEventListener('click', finishGame);
 
 /*------- functions ---------*/
 init();
@@ -82,10 +88,29 @@ function init() {
 }
 
 function finishGame() {
-    if (winner === "Player") {
-        console.log(matchPot);
-        console.log(potArray);
+    if (winner === null) {
+        return;
+    } else if (winner === "player") {
+        var matchPot = potArray.slice();
+        for(i = 0; i < potArray.length; i++) {
+            bankArray.push(potArray[i])
+        }
+        for(i = 0; i < matchPot.length; i++) {
+            bankArray.push(matchPot[i]);
+        }
+    } else if (winner === "dealer") {
+        potArray = [];
     }
+    bankText.innerHTML = `You have $${sumBank()}`;
+    potDisplay.innerHTML = "";
+    potDisplay.setAttribute('class', 'hidden');
+    resetBtn.setAttribute('class', 'hidden');
+    winBtn.setAttribute('class', 'hidden');
+    potArray = [];
+    matchPot = [];
+    playerCardContainer.innerHTML = '';
+    dealerCardContainer.innerHTML = '';
+    
 }
 
 function checkWinner() {
@@ -100,15 +125,13 @@ function checkWinner() {
         for(i = 0; i < matchPot.length; i++) {
             bankArray.push(matchPot[i]);
         }
-        chipBtn.innerHTML = sumBank();
-        potDisplay.innerHTML = "";
-        potArray = [];
-        matchPot = [];
+        winBtn.removeAttribute('class');
     } else if (winner === "dealer") {
         msg.textContent = "DEALER WINS!";
-        potArray = [];
-        potDisplay.innerHTML = "";
+        resetBtn.removeAttribute('class');
     }
+    hitBtn.setAttribute('class', 'hidden');
+    standBtn.setAttribute('class', 'hidden');
 }
         
 function flipCard() {
@@ -227,6 +250,7 @@ function renderBack(container) {
     var newCard = document.createElement('div');
     newCard.setAttribute('class', 'card back-blue');
     container.appendChild(newCard);
+
 }
 
 function renderCard(arr, idx, container) {
@@ -251,6 +275,9 @@ function handleDeal() {
     playerTotal = getPlayer();
     checkForAce(player);
     checkForBust();
+    dealBtn.setAttribute('class', 'hidden');
+    hitBtn.removeAttribute('class');
+    standBtn.removeAttribute('class');
 }
 
 function sumPot() {
@@ -273,15 +300,24 @@ function makeBet() {
     if (bankArray.length > 0) {
         potArray.push(bankArray[0]);
         bankArray.shift();
-        chipBtn.innerHTML = sumBank();
-        potDisplay.innerHTML = sumPot();
+        bankText.innerHTML = `You have $${sumBank()}`;
+        potDisplay.setAttribute('class', 'chip');
+        potDisplay.innerHTML = `$${sumPot()}`;
     } else {
         msg.innerText = "You need more money"
     }
+    dealBtn.removeAttribute('class');
 }
 
 function render() {
-    chipBtn.innerHTML = sumBank();
+    bankText.innerHTML = `You have $${sumBank()}`;
+    potDisplay.setAttribute('class', 'hidden');
+    msg.textContent = "Click on your chips to make your bet";
+    dealBtn.setAttribute('class', 'hidden');
+    hitBtn.setAttribute('class', 'hidden');
+    standBtn.setAttribute('class', 'hidden');
+    resetBtn.setAttribute('class', 'hidden');
+    winBtn.setAttribute('class', 'hidden');
 }
 
 function shuffle() {
