@@ -17,8 +17,11 @@
     <div class="wrapper">
         <h2 id="msg"></h2>
         <section id="table">
-            <div class="card-container" id="dealer"></div>
-            <div class="btn-area">
+            <div id="dealer-card-wrapper">
+                <div class="card-container" id="dealer"></div>
+                <p id="dealer-sum"></p>
+            </div>
+            <div class="btn-area" id="left-btns">
                 <button class="button" id="hit">HIT</button>
             </div>
             <div id="pot">
@@ -27,14 +30,17 @@
             <div class="btn-area">
                 <button class="button" id="stand">STAND</button>
                 <button class="button" id="deal">DEAL</button>
-                <button class="button" id="reset">DEAL AGAIN</button>
+                <button class="button" id="reset">PLAY ANOTHER HAND</button>
                 <button class="button" id="win">COLLECT YOUR MONEY & DEAL AGAIN</button>
             </div>
             <div id="chip-bank">
                 <div class ="chip" id="bank-chip">$100</div>
                 <p class="chip-text" id="bank-text"></p>
             </div>
-            <div class="card-container" id="player"></div>
+            <div id="player-card-wrapper">
+                <div class="card-container" id="player"></div>
+                <p id="player-sum"></p>
+            </div>
         </section>
     </div>
 </body>

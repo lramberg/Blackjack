@@ -29,6 +29,8 @@ var playerCardContainer = document.getElementById('player');
 var msg = document.getElementById('msg');
 var potDisplay = document.getElementById('pot-chip');
 var bankText = document.getElementById('bank-text');
+var playerSum = document.getElementById('player-sum');
+var dealerSum = document.getElementById('dealer-sum');
 
 
 /*------- event listeners ---------*/
@@ -49,7 +51,7 @@ function init() {
 function finishGame() {
     if (winner === null) {
         return;
-    } else if (winner === "player") {
+    } else if (winner === "player" || winner === "dealer-bust") {
         var matchPot = potArray.slice();
         for(i = 0; i < potArray.length; i++) {
             bankArray.push(potArray[i])
@@ -57,19 +59,14 @@ function finishGame() {
         for(i = 0; i < matchPot.length; i++) {
             bankArray.push(matchPot[i]);
         }
-    } else if (winner === "dealer") {
+    } else if (winner === "dealer" || winner === "player-bust") {
         potArray = [];
     }
-    bankText.innerHTML = `You have $${sumBank()}`;
-    potDisplay.innerHTML = "";
-    potDisplay.setAttribute('class', 'hidden');
-    resetBtn.setAttribute('class', 'hidden');
-    winBtn.setAttribute('class', 'hidden');
     potArray = [];
     matchPot = [];
-    playerCardContainer.innerHTML = '';
-    dealerCardContainer.innerHTML = '';
-    
+    dealer = [];
+    player = [];
+    render();
 }
 
 function checkWinner() {
@@ -77,13 +74,6 @@ function checkWinner() {
         return;
     } else if (winner === "player") {
         msg.textContent = "YOU WIN!";
-        var matchPot = potArray.slice();
-        for(i = 0; i < potArray.length; i++) {
-            bankArray.push(potArray[i])
-        }
-        for(i = 0; i < matchPot.length; i++) {
-            bankArray.push(matchPot[i]);
-        }
         winBtn.setAttribute('class', 'button');
     } else if (winner === "dealer") {
         msg.textContent = "DEALER WINS!";
@@ -99,6 +89,7 @@ function flipCard() {
 }
         
 function checkDealer() {
+    checkDeckLength();
     while (dealerTotal <= 16) {
         dealer.push(shuffledDeck[0]);
         shuffledDeck.shift();
@@ -106,12 +97,15 @@ function checkDealer() {
         dealerTotal = getDealer();
         dealerCheckAce();
         dealerTotal = getDealer();
-        
-        console.log(dealer);
     } 
     if (dealerTotal > 21) {
-        msg.textContent = "DEALER BUST!";
-        winner = "player";      
+        msg.textContent = "DEALER BUSTED!";
+        winner = "dealer-bust";    
+        hitBtn.setAttribute('class', 'hidden');
+        standBtn.setAttribute('class', 'hidden');
+        winBtn.setAttribute('class', 'button');  
+    } else if (dealerTotal === 21) {
+        msg.textContent = "BLACKJACK!";
     }
 }
 
@@ -124,18 +118,20 @@ function getDealer() {
 }
 
 function handleStand() {
+    checkDeckLength();
     flipCard();
     dealerTotal = getDealer();
     checkDealer();
+    dealerSum.textContent = `${dealerTotal}`;
 
     if (playerTotal > dealerTotal && playerTotal <= 21) {
         winner = "player";
     } else if (dealerTotal > playerTotal && dealerTotal <= 21) {
         winner = "dealer";
-    } else if (dealerTotal === playerTotal) {
+    } else if (dealerTotal === playerTotal && dealerTotal <= 21) {
         winner = "dealer";
     }
-
+    blackjack();
     checkWinner();
 }
 
@@ -157,7 +153,6 @@ function dealerCheckAce() {
             }
         }
     }
-    
 }
 
 function checkForAce() {
@@ -167,36 +162,50 @@ function checkForAce() {
     });
     if (hasA && playerTotal > 21) {
         for(i = 0; i < player.length; i++) {
-        if (player[i].face === 'sA'){
-            player[i].value = 1;
-        } else if (player[i].face === 'cA') {
-            player[i].value = 1;
-        } else if (player[i].face === 'dA') {
-            player[i].value = 1;
-        } else if (player[i].face === 'hA') {
-            player[i].value = 1;
-        }
+            if (player[i].face === 'sA'){
+                player[i].value = 1;
+            } else if (player[i].face === 'cA') {
+                player[i].value = 1;
+            } else if (player[i].face === 'dA') {
+                player[i].value = 1;
+            } else if (player[i].face === 'hA') {
+                player[i].value = 1;
+            }
         }
     }
 }
 
-function checkForBust() {
-    playerTotal = getPlayer();
-    if (playerTotal > 21) {
-        msg.textContent = "PLAYER BUST!";
-        winner = "dealer";
-    } 
-}
-
-
 function handleHit() {
+    checkDeckLength();
     player.push(shuffledDeck[0]);
     shuffledDeck.shift();
     renderCard(player, player.length-1, playerCardContainer);
     playerTotal = getPlayer();
     checkForAce();
     checkForBust();
+    blackjack();
     checkWinner();
+    playerSum.textContent = `${playerTotal}`;
+}
+
+function checkForBust() {
+    playerTotal = getPlayer();
+    if (playerTotal > 21) {
+        msg.textContent = "YOU BUSTED!";
+        flipCard();
+        dealerTotal = getDealer();
+        dealerSum.textContent = `${dealerTotal}`;
+        winner = "player-bust";
+        hitBtn.setAttribute('class', 'hidden');
+        standBtn.setAttribute('class', 'hidden');
+        resetBtn.setAttribute('class', 'button');
+    } 
+}
+
+function blackjack() {
+    if (playerTotal === 21 || dealerTotal === 21) {
+        msg.textContent = "BLACKJACK";
+    }
 }
 
 function getPlayer() {
@@ -221,6 +230,7 @@ function renderCard(arr, idx, container) {
 }
 
 function handleDeal() {
+    checkDeckLength();
     player.push(shuffledDeck[0]);
     shuffledDeck.shift();
     renderCard(player, 0, playerCardContainer);
@@ -234,11 +244,16 @@ function handleDeal() {
     shuffledDeck.shift();
     renderCard(dealer, 1, dealerCardContainer);
     playerTotal = getPlayer();
-    checkForAce(player);
+    checkForAce();
     checkForBust();
     dealBtn.setAttribute('class', 'hidden');
     hitBtn.setAttribute('class', 'button');
     standBtn.setAttribute('class', 'button');
+    resetBtn.setAttribute('class', 'hidden');
+    winBtn.setAttribute('class', 'hidden');
+    playerSum.textContent = `${playerTotal}`;
+    msg.textContent = 'GOOD LUCK';
+    blackjack();
 }
 
 function sumPot() {
@@ -265,20 +280,33 @@ function makeBet() {
         potDisplay.setAttribute('class', 'chip');
         potDisplay.innerHTML = `$${sumPot()}`;
     } else {
-        msg.innerText = "You need more money"
+        msg.textContent = "YOU RAN OUT OF MONEY";
     }
     dealBtn.setAttribute('class', 'button');
 }
 
 function render() {
     bankText.innerHTML = `You have $${sumBank()}`;
+    potDisplay.innerHTML = "";
     potDisplay.setAttribute('class', 'hidden');
-    msg.textContent = "CLICK ON THE CHIP TO MAKE A BET";
+    msg.textContent = "CLICK ON THE CHIP TO PLACE YOUR BET";
     dealBtn.setAttribute('class', 'hidden');
     hitBtn.setAttribute('class', 'hidden');
     standBtn.setAttribute('class', 'hidden');
     resetBtn.setAttribute('class', 'hidden');
     winBtn.setAttribute('class', 'hidden');
+    playerSum.textContent = '';
+    dealerSum.textContent = '';
+    playerCardContainer.innerHTML = '';
+    dealerCardContainer.innerHTML = '';
+    winner = null;
+}
+
+function checkDeckLength() {
+    if (shuffledDeck.length === 1) {
+        buildMasterDeck();
+        shuffle();
+    }
 }
 
 function shuffle() {
