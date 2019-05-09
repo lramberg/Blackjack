@@ -23,6 +23,8 @@ Clicking on the poker chip will initiate gameplay, follow instructions and butto
 
 Planned future enhacments include:
 
+Adding animation and timeouts for when the cards are dealt.
+
 Adding a split function for when the first two cards dealt are the same. 
 
 Adding an option to "buy" more chips when user runs out
