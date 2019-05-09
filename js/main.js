@@ -303,10 +303,10 @@ function render() {
 }
 
 function checkDeckLength() {
-    if (shuffledDeck.length === 1) {
-        buildMasterDeck();
+    if (shuffledDeck.length <= 1) {
         shuffle();
     }
+    return shuffledDeck;
 }
 
 function shuffle() {
