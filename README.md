@@ -8,10 +8,10 @@
 
 ## Technoligies Used
 
-HTML
-CSS
-JavaScript
-Photo Image Editor Pixelstyle
+ * HTML
+ * CSS
+ * JavaScript
+ * Photo Image Editor Pixelstyle
 
 ## Getting Started
 
