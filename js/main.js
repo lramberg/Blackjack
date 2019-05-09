@@ -84,10 +84,10 @@ function checkWinner() {
         for(i = 0; i < matchPot.length; i++) {
             bankArray.push(matchPot[i]);
         }
-        winBtn.removeAttribute('class');
+        winBtn.setAttribute('class', 'button');
     } else if (winner === "dealer") {
         msg.textContent = "DEALER WINS!";
-        resetBtn.removeAttribute('class');
+        resetBtn.setAttribute('class', 'button');
     }
     hitBtn.setAttribute('class', 'hidden');
     standBtn.setAttribute('class', 'hidden');
@@ -131,6 +131,8 @@ function handleStand() {
     if (playerTotal > dealerTotal && playerTotal <= 21) {
         winner = "player";
     } else if (dealerTotal > playerTotal && dealerTotal <= 21) {
+        winner = "dealer";
+    } else if (dealerTotal === playerTotal) {
         winner = "dealer";
     }
 
@@ -235,8 +237,8 @@ function handleDeal() {
     checkForAce(player);
     checkForBust();
     dealBtn.setAttribute('class', 'hidden');
-    hitBtn.removeAttribute('class');
-    standBtn.removeAttribute('class');
+    hitBtn.setAttribute('class', 'button');
+    standBtn.setAttribute('class', 'button');
 }
 
 function sumPot() {
@@ -265,13 +267,13 @@ function makeBet() {
     } else {
         msg.innerText = "You need more money"
     }
-    dealBtn.removeAttribute('class');
+    dealBtn.setAttribute('class', 'button');
 }
 
 function render() {
     bankText.innerHTML = `You have $${sumBank()}`;
     potDisplay.setAttribute('class', 'hidden');
-    msg.textContent = "Click on your chips to make your bet";
+    msg.textContent = "CLICK ON THE CHIP TO MAKE A BET";
     dealBtn.setAttribute('class', 'hidden');
     hitBtn.setAttribute('class', 'hidden');
     standBtn.setAttribute('class', 'hidden');

@@ -5,31 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Blackjack</title>
-    <link href="https://fonts.googleapis.com/css?family=Codystar|Diplomata+SC|Gruppo|Limelight|Notable|Poiret+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Notable|Poiret+One" rel="stylesheet">
     <link rel="stylesheet" href="css/card-deck-css/css/cardstarter.css">
     <link rel="stylesheet" href="css/main.css">
     <script defer src="js/main.js"></script>
 </head>
 <body>
-    <header>BLACKJACK</header>
-    <h2 id="msg"></h2>
-    <section id="table">
-        <div class="card-container" id="dealer"></div>
-        <div id="pot">
-            <div class ="chip" id="pot-chip"></div>
-        </div>
-        <div id="chip-bank">
-            <div class ="chip" id="bank-chip">$100</div>
-            <p class="chip-text" id="bank-text"></p>
-        </div>
-        <div class="card-container" id="player"></div>
-    </section>
-    <section id="buttons">
-        <button id="deal">DEAL</button>
-        <button id="hit">HIT</button>
-        <button id="stand">STAND</button>
-        <button id="reset">DEAL AGAIN</button>
-        <button id="win">COLLECT YOUR MONEY & DEAL AGAIN</button>
-    </section>
+    <header>
+        <h1>BLACKJACK</h1>
+    </header>
+    <div class="wrapper">
+        <h2 id="msg"></h2>
+        <section id="table">
+            <div class="card-container" id="dealer"></div>
+            <div class="btn-area">
+                <button class="button" id="hit">HIT</button>
+            </div>
+            <div id="pot">
+                <div class ="chip" id="pot-chip"></div>
+            </div>
+            <div class="btn-area">
+                <button class="button" id="stand">STAND</button>
+                <button class="button" id="deal">DEAL</button>
+                <button class="button" id="reset">DEAL AGAIN</button>
+                <button class="button" id="win">COLLECT YOUR MONEY & DEAL AGAIN</button>
+            </div>
+            <div id="chip-bank">
+                <div class ="chip" id="bank-chip">$100</div>
+                <p class="chip-text" id="bank-text"></p>
+            </div>
+            <div class="card-container" id="player"></div>
+        </section>
+    </div>
 </body>
 </html>
