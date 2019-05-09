@@ -9,14 +9,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url("css/images/background.png");
+    background: url(/Users/lyndsayramberg/Desktop/FEWD/code/Blackjack/css/images);
     background-size: 100%;
     background-position: center;
 }
 
+header {
+    font-family: 
+}
+
 #table {
-    height: 80vh;
-    width: 90vh;
+    height: 60vh;
+    width: 85vh;
     background-color: rgba(51, 11, 28, .9);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
