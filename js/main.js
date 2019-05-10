@@ -303,7 +303,7 @@ function render() {
 }
 
 function checkDeckLength() {
-    if (shuffledDeck.length <= 1) {
+    if (shuffledDeck.length <= 4) {
         shuffle();
     }
     return shuffledDeck;
