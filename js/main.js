@@ -4,7 +4,6 @@ var ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K'
 
 var masterDeck = buildMasterDeck();
 
-
 /*-------- app's state variables --------*/
 var bankArray = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 var potArray = [];
@@ -15,7 +14,6 @@ var shuffledDeck = [];
 var playerTotal;
 var dealerTotal;
 var winner = null;
-
 
 /*-------- cached elements --------*/
 var dealBtn = document.getElementById('deal');
@@ -32,7 +30,6 @@ var bankText = document.getElementById('bank-text');
 var playerSum = document.getElementById('player-sum');
 var dealerSum = document.getElementById('dealer-sum');
 
-
 /*------- event listeners ---------*/
 chipBtn.addEventListener('click', makeBet);
 dealBtn.addEventListener('click', handleDeal);
@@ -43,10 +40,6 @@ winBtn.addEventListener('click', finishGame);
 
 /*------- functions ---------*/
 init();
-function init() {
-    shuffle();
-    render();
-}
 
 function finishGame() {
     if (winner === null) {
@@ -82,12 +75,12 @@ function checkWinner() {
     hitBtn.setAttribute('class', 'hidden');
     standBtn.setAttribute('class', 'hidden');
 }
-        
+
 function flipCard() {
     var dealerCard = document.querySelector('.card.back-blue');
     dealerCard.setAttribute('class', `card ${dealer[0].face}`);
 }
-        
+
 function checkDealer() {
     checkDeckLength();
     while (dealerTotal <= 16) {
@@ -123,7 +116,7 @@ function handleStand() {
     dealerTotal = getDealer();
     checkDealer();
     dealerSum.textContent = `${dealerTotal}`;
-
+    
     if (playerTotal > dealerTotal && playerTotal <= 21) {
         winner = "player";
     } else if (dealerTotal > playerTotal && dealerTotal <= 21) {
@@ -220,7 +213,7 @@ function renderBack(container) {
     var newCard = document.createElement('div');
     newCard.setAttribute('class', 'card back-blue');
     container.appendChild(newCard);
-
+    
 }
 
 function renderCard(arr, idx, container) {
@@ -231,6 +224,7 @@ function renderCard(arr, idx, container) {
 
 function handleDeal() {
     checkDeckLength();
+
     player.push(shuffledDeck[0]);
     shuffledDeck.shift();
     renderCard(player, 0, playerCardContainer);
@@ -243,14 +237,17 @@ function handleDeal() {
     dealer.push(shuffledDeck[0]);
     shuffledDeck.shift();
     renderCard(dealer, 1, dealerCardContainer);
+
     playerTotal = getPlayer();
     checkForAce();
     checkForBust();
+
     dealBtn.setAttribute('class', 'hidden');
     hitBtn.setAttribute('class', 'button');
     standBtn.setAttribute('class', 'button');
     resetBtn.setAttribute('class', 'hidden');
     winBtn.setAttribute('class', 'hidden');
+
     playerSum.textContent = `${playerTotal}`;
     msg.textContent = 'GOOD LUCK';
     blackjack();
@@ -286,10 +283,10 @@ function makeBet() {
 }
 
 function render() {
+    msg.textContent = "CLICK ON THE CHIP TO PLACE YOUR BET";
     bankText.innerHTML = `You have $${sumBank()}`;
     potDisplay.innerHTML = "";
     potDisplay.setAttribute('class', 'hidden');
-    msg.textContent = "CLICK ON THE CHIP TO PLACE YOUR BET";
     dealBtn.setAttribute('class', 'hidden');
     hitBtn.setAttribute('class', 'hidden');
     standBtn.setAttribute('class', 'hidden');
@@ -328,4 +325,9 @@ function buildMasterDeck() {
         });
     });
     return deck;
+}
+
+function init() {
+    shuffle();
+    render();
 }
